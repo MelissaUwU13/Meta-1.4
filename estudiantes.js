@@ -54,3 +54,30 @@ console.log("Array Filtrado\n", estudiantesDestacados);
 console.log("\nESTUDIANTES AVANZADOS\n");
 const estudiantesAvanzados = estudiantes.filter(filtrarPorMaterias);
 console.log("Array Filtrado\n", estudiantesAvanzados);
+
+
+
+// 2.1. Crear un array con solo los nombres de todos los estudiantes
+const nombresEstudiantes = estudiantes.map(function (obj) {
+  if ("nombre" in obj && typeof obj.nombre == "string" ) {
+    return obj.nombre;
+  } 
+  else {
+    return false;
+  }
+});
+
+console.log("\nNOMBRES DE ESTUDIANTES\n");
+console.log("Array Filtrado\n", nombresEstudiantes);
+
+// 2.2. Crear un array de objetos con nombre y promedio de cada estudiante
+const promediosEstudiantes = estudiantes.map(alumnos => [alumnos.promedio, alumnos.nombre]);
+
+console.log("\nNOMBRES Y PROMEDIOS DE ESTUDIANTES\n");
+console.log("Array Filtrado\n", promediosEstudiantes);
+
+// 2.3. Convertir las calificaciones a un sistema de 0-10 (redondeando a un decimal)
+const calificacionesEscala10 = calificaciones.map(calificacion => calificacion/10);
+
+console.log("\nCALIFICACIONES DE ESTUDIANTES\n");
+console.log("Array Filtrado\n", calificacionesEscala10);
