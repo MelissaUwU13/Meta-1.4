@@ -9,7 +9,16 @@ const estudiantes = [
 
 const calificaciones = [85, 92, 78, 90, 65, 88, 72, 95, 81, 79];
 
-function filtrarPorCarrera(obj) {
+function filtrarPorIngenieria(obj) {
+  if ("carrera" in obj && obj.carrera == "Ingeniería" ) {
+    return true;
+  } 
+  else {
+    return false;
+  }
+}
+
+function filtrarPorComputacion(obj) {
   if ("carrera" in obj && obj.carrera == "Computación" ) {
     return true;
   } 
@@ -27,6 +36,15 @@ function filtrarPorPromedio(obj) {
   }
 }
 
+function filtrarPorPromedioComputacion(obj) {
+  if ("promedio" in obj && obj.promedio > 9.0 ) {
+    return true;
+  } 
+  else {
+    return false;
+  }
+}
+
 function filtrarPorMaterias(obj) {
   if ("materiasAprobadas" in obj && obj.materiasAprobadas >= 30 ) {
     return true;
@@ -37,9 +55,8 @@ function filtrarPorMaterias(obj) {
 }
 
 
-
 // 1.1. Obtener un array con solo los estudiantes de Computación
-const estudiantesComputacion = estudiantes.filter(filtrarPorCarrera);
+const estudiantesComputacion = estudiantes.filter(filtrarPorComputacion);
 console.log("\nESTUDIANTES DE COMPUTACION\n");
 console.log("Array Filtrado\n", estudiantesComputacion);
 
@@ -83,13 +100,13 @@ console.log("\nCALIFICACIONES DE ESTUDIANTES\n");
 console.log("Array Filtrado\n", calificacionesEscala10);
 
 
+
+
 // 3.1. Calcular el promedio general de todos los estudiantes
-const sumaPromedioGeneral = estudiantes.reduce((acumulador, calificacion, indice) => {
+const promedioGeneral = estudiantes.reduce((acumulador, calificacion) => {
     const promedioEstudiante = calificacion.promedio;
     return acumulador + promedioEstudiante;
-}, 0);
-
-const promedioGeneral = sumaPromedioGeneral/estudiantes.length;
+}, 0)/estudiantes.length;
 
 console.log("\nPROMEDIO DE TODOS LOS ESTUDIANTES\n");
 console.log(`El resultado es ${promedioGeneral}`);
@@ -120,3 +137,32 @@ const calificacionMaxima = calificaciones.reduce((numMax, numero) => {
 
 console.log("\nCALIFICACION MAS ALTA\n");
 console.log("El resultado es",calificacionMaxima);
+
+
+
+// 4.1. Obtener los nombres de los estudiantes de Computación con promedio mayor a 9.0
+const mejoresComputacion = estudiantes
+  .filter(filtrarPorComputacion && filtrarPorPromedioComputacion)
+  .map(alumnos => alumnos.nombre);
+  
+console.log("\nMEJORES ESTUDIANTES DE COMPUTACION\n");
+console.log("Array Filtrado\n", mejoresComputacion);
+
+// 4.2. Calcular el promedio de materias aprobadas solo para estudiantes de Ingeniería
+const promedioMateriasIngenieria = estudiantes
+  .filter(filtrarPorIngenieria)
+  .reduce((acumulador, calificacion) => {
+    const promedioEstudiantes = calificacion.materiasAprobadas;
+    return acumulador + promedioEstudiantes;
+}, 0)/estudiantes.filter(filtrarPorIngenieria).length;
+
+console.log("\nPROMEDIO DE MATERIAS APROBADAS DE LOS ESTUDIANTES DE INGENIERIA\n");
+console.log(`El resultado es ${promedioMateriasIngenieria}`);
+
+// 4.3. Convertir calificaciones a escala 0-10 y luego filtrar solo las mayores a 8.5
+const calificacionesAltas = calificaciones
+  .map(calificacion => calificacion/10)
+  .filter(calificacions => calificacions>8.5);
+  
+console.log("\nMEJORES CALIFICACIONES MAYORES A 8.5\n");
+console.log("Array Filtrado\n", calificacionesAltas);
