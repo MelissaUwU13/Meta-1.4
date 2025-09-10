@@ -166,3 +166,40 @@ const calificacionesAltas = calificaciones
   
 console.log("\nMEJORES CALIFICACIONES MAYORES A 8.5\n");
 console.log("Array Filtrado\n", calificacionesAltas);
+
+
+
+// Crear una función que reciba un array de estudiantes y devuelva un objeto con:
+// - promedioGeneral: el promedio de todos los estudiantes
+// - porCarrera: objeto con promedios por cada carrera
+// - mejorEstudiante: nombre del estudiante con mayor promedio
+
+function generarReporte(estudiantes){
+  const promedioGeneral = estudiantes.reduce((acumulador, calificacion) => {
+    const promedioEstudiante = calificacion.promedio;
+    return acumulador + promedioEstudiante;
+  }, 0)/estudiantes.length;
+  
+  const porCarrera = estudiantes.reduce((acumulador, alumnos, _, arregloEstudiantes) => {
+    const totalCarrera = arregloEstudiantes.filter(estudiante => estudiante.carrera === alumnos.carrera).length;
+    
+      if (acumulador[alumnos.carrera] === undefined){
+          acumulador[alumnos.carrera] = 0;
+      }
+      
+      acumulador[alumnos.carrera] += alumnos.promedio / totalCarrera;
+      return acumulador;
+  }, {});
+
+  const mejorEstudiante = estudiantes.reduce((numMax, numero) => 
+    numero.promedio > numMax.promedio ? numero : numMax
+  ).nombre;
+
+  return {
+      promedioGeneral,
+      porCarrera,
+      mejorEstudiante} ;
+}
+
+console.log("\nPROMEDIO GENERAL, PROMEDIO POR CARRERAS Y MEJOR ESTUDIANTE\n");
+console.log(generarReporte(estudiantes));
