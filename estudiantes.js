@@ -81,3 +81,42 @@ const calificacionesEscala10 = calificaciones.map(calificacion => calificacion/1
 
 console.log("\nCALIFICACIONES DE ESTUDIANTES\n");
 console.log("Array Filtrado\n", calificacionesEscala10);
+
+
+// 3.1. Calcular el promedio general de todos los estudiantes
+const sumaPromedioGeneral = estudiantes.reduce((acumulador, calificacion, indice) => {
+    const promedioEstudiante = calificacion.promedio;
+    return acumulador + promedioEstudiante;
+}, 0);
+
+const promedioGeneral = sumaPromedioGeneral/estudiantes.length;
+
+console.log("\nPROMEDIO DE TODOS LOS ESTUDIANTES\n");
+console.log(`El resultado es ${promedioGeneral}`);
+
+// 3.2. Contar cuántos estudiantes hay por cada carrera
+const estudiantesPorCarrera = estudiantes.reduce((acumulador, estudiante) => {
+    if (!acumulador.hasOwnProperty(estudiante.carrera)) {
+        acumulador[estudiante.carrera] = 1;
+    } 
+    else{
+        acumulador[estudiante.carrera]++;
+    }
+    return acumulador;
+}, {});
+
+console.log("\nESTUDIANTES POR CARRERAS\n");
+console.log("La carreras son \n",estudiantesPorCarrera);
+
+
+// 3.3. Encontrar la calificación más alta
+const calificacionMaxima = calificaciones.reduce((numMax, numero) => {
+    if (numero > numMax) {
+        numMax = numero;
+    }
+
+    return numMax;
+}, Number.NEGATIVE_INFINITY);
+
+console.log("\nCALIFICACION MAS ALTA\n");
+console.log("El resultado es",calificacionMaxima);
