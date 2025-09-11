@@ -9,40 +9,34 @@ const estudiantes = [
 
 const calificaciones = [85, 92, 78, 90, 65, 88, 72, 95, 81, 79];
 
-function filtrarPorIngenieria(obj) {
-  if ("carrera" in obj && obj.carrera == "Ingeniería" ) {
-    return true;
-  } 
-  else {
-    return false;
-  }
+function filtrarPorCarrera(carrera) {
+  return function (array) {
+    return array.filter(function (obj) {
+      if ("carrera" in obj && obj.carrera === carrera) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  };
 }
 
-function filtrarPorComputacion(obj) {
-  if ("carrera" in obj && obj.carrera == "Computación" ) {
-    return true;
-  } 
-  else {
-    return false;
-  }
+function filtrarPorPromedio(minimo) {
+  return function (array) {
+    return array.filter(function (obj) {
+      if ("promedio" in obj && obj.promedio >= minimo) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+  };
 }
 
-function filtrarPorPromedio(obj) {
-  if ("promedio" in obj && obj.promedio >= 8.5 ) {
-    return true;
-  } 
-  else {
-    return false;
-  }
-}
-
-function filtrarPorPromedioComputacion(obj) {
-  if ("promedio" in obj && obj.promedio > 9.0 ) {
-    return true;
-  } 
-  else {
-    return false;
-  }
+function mapearNombrePromedio(array) {
+  return array.map(function (obj) {
+    return { nombre: obj.nombre, promedio: obj.promedio };
+  });
 }
 
 function filtrarPorMaterias(obj) {
@@ -56,13 +50,13 @@ function filtrarPorMaterias(obj) {
 
 
 // 1.1. Obtener un array con solo los estudiantes de Computación
-const estudiantesComputacion = estudiantes.filter(filtrarPorComputacion);
+const estudiantesComputacion = estudiantes.filter(alumnos => alumnos.carrera == "Computación");
 console.log("\nESTUDIANTES DE COMPUTACION\n");
 console.log("Array Filtrado\n", estudiantesComputacion);
 
 
 // 1.2. Obtener estudiantes con promedio mayor o igual a 8.5
-const estudiantesDestacados = estudiantes.filter(filtrarPorPromedio);
+const estudiantesDestacados = estudiantes.filter(alumnos => alumnos.promedio >= 8.5);
 console.log("\nESTUDIANTES DESTACADOS\n");
 console.log("Array Filtrado\n", estudiantesDestacados);
 
@@ -71,7 +65,6 @@ console.log("Array Filtrado\n", estudiantesDestacados);
 console.log("\nESTUDIANTES AVANZADOS\n");
 const estudiantesAvanzados = estudiantes.filter(filtrarPorMaterias);
 console.log("Array Filtrado\n", estudiantesAvanzados);
-
 
 
 // 2.1. Crear un array con solo los nombres de todos los estudiantes
@@ -98,7 +91,6 @@ const calificacionesEscala10 = calificaciones.map(calificacion => calificacion/1
 
 console.log("\nCALIFICACIONES DE ESTUDIANTES\n");
 console.log("Array Filtrado\n", calificacionesEscala10);
-
 
 
 
@@ -142,7 +134,7 @@ console.log("El resultado es",calificacionMaxima);
 
 // 4.1. Obtener los nombres de los estudiantes de Computación con promedio mayor a 9.0
 const mejoresComputacion = estudiantes
-  .filter(filtrarPorComputacion && filtrarPorPromedioComputacion)
+  .filter(alumnos => alumnos.carrera == "Computación" && alumnos.promedio >=9.0)
   .map(alumnos => alumnos.nombre);
   
 console.log("\nMEJORES ESTUDIANTES DE COMPUTACION\n");
@@ -150,11 +142,11 @@ console.log("Array Filtrado\n", mejoresComputacion);
 
 // 4.2. Calcular el promedio de materias aprobadas solo para estudiantes de Ingeniería
 const promedioMateriasIngenieria = estudiantes
-  .filter(filtrarPorIngenieria)
+  .filter(alumnos => alumnos.carrera == "Ingeniería")
   .reduce((acumulador, calificacion) => {
     const promedioEstudiantes = calificacion.materiasAprobadas;
     return acumulador + promedioEstudiantes;
-}, 0)/estudiantes.filter(filtrarPorIngenieria).length;
+}, 0)/estudiantes.filter(alumnos => alumnos.carrera == "Ingeniería").length;
 
 console.log("\nPROMEDIO DE MATERIAS APROBADAS DE LOS ESTUDIANTES DE INGENIERIA\n");
 console.log(`El resultado es ${promedioMateriasIngenieria}`);
@@ -166,7 +158,6 @@ const calificacionesAltas = calificaciones
   
 console.log("\nMEJORES CALIFICACIONES MAYORES A 8.5\n");
 console.log("Array Filtrado\n", calificacionesAltas);
-
 
 
 // Crear una función que reciba un array de estudiantes y devuelva un objeto con:
@@ -203,3 +194,28 @@ function generarReporte(estudiantes){
 
 console.log("\nPROMEDIO GENERAL, PROMEDIO POR CARRERAS Y MEJOR ESTUDIANTE\n");
 console.log(generarReporte(estudiantes));
+
+
+
+// 6.1. Implementar la función de orden superior procesarDatos
+function procesarDatos(array, ...operaciones) {
+  let resultado = array;
+
+  for (let i = 0; i < operaciones.length; i++) {
+    resultado = operaciones[i](resultado);
+  }
+
+  return resultado;
+}
+
+
+// 6.2. Usar la función procesarDatos con las operaciones definidas
+// Obtener nombres y promedios de estudiantes de Computación con promedio >= 9.0
+const resultadoComputacion = procesarDatos(
+  estudiantes,
+  filtrarPorCarrera("Computación"),
+  filtrarPorPromedio(9.0),
+  mapearNombrePromedio
+);
+
+console.log("Estudiantes de Computación con promedio >= 9.0:", resultadoComputacion);
